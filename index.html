@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern PDF Watermark</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 h-screen w-full flex flex-col md:flex-row overflow-hidden text-gray-800">
+
+    <aside class="w-full md:w-[400px] bg-white border-r border-gray-200 flex flex-col h-1/2 md:h-full shadow-xl z-20">
+        
+        <div class="p-6 border-b border-gray-100 bg-white">
+            <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-sm">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                PDF Watermark
+            </h1>
+            <p class="text-xs text-gray-500 mt-1 pl-10">Secure Client-side Processing</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar">
+            
+            <div class="group relative border-2 border-dashed border-gray-300 hover:border-indigo-500 rounded-2xl p-6 text-center transition-all bg-gray-50 hover:bg-indigo-50 cursor-pointer">
+                <label for="uploadInput" class="sr-only">Upload PDF File</label>
+                <input type="file" id="uploadInput" accept="application/pdf" title="Upload PDF" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                <div class="space-y-3 pointer-events-none">
+                    <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                        <i class="fas fa-cloud-upload-alt text-indigo-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700" id="fileName">Click or Drop PDF here</p>
+                        <p class="text-xs text-gray-400 mt-1">for insert Watermark</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                
+                <div>
+                    <label for="watermarkText" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Watermark Text</label>
+                    <div class="relative">
+                        <input type="text" id="watermarkText" placeholder="e.g., For official use only" value="ใช้สำหรับสมัครงานเท่านั้น" 
+                            class="input-text w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-gray-700 font-medium">
+                        <i class="fas fa-pen absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="textColor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Color</label>
+                        <div class="h-11 w-full relative overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+                            <input type="color" id="textColor" value="#FF0000" title="Choose Text Color" class="input-slider absolute -top-2 -left-2 w-[150%] h-[150%] cursor-pointer p-0 border-0">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="opacity" class="flex justify-between text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Opacity <span id="opacityVal" class="text-indigo-600">20%</span>
+                        </label>
+                        <input type="range" id="opacity" min="0.1" max="1" step="0.05" value="0.2" title="Adjust Opacity" class="input-slider h-11">
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div class="space-y-5">
+                    <p class="text-xs font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fas fa-sliders-h text-indigo-500"></i> Adjustments
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label for="textSize" class="text-xs text-gray-500 mb-1 block">Size</label>
+                            <input type="range" id="textSize" min="20" max="150" value="50" title="Text Size" class="input-slider">
+                        </div>
+                        <div>
+                            <label for="rotate" class="text-xs text-gray-500 mb-1 block">Rotate</label>
+                            <input type="range" id="rotate" min="-90" max="90" value="30" title="Rotation Angle" class="input-slider">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="xOffset" class="text-xs text-gray-500 flex justify-between mb-1">
+                                <span>Horizontal (X)</span> <span id="xValDisplay" class="font-mono text-xs">0</span>
+                            </label>
+                            <input type="range" id="xOffset" min="-400" max="400" value="0" title="Horizontal Position" class="input-slider">
+                        </div>
+                        <div>
+                            <label for="yOffset" class="text-xs text-gray-500 flex justify-between mb-1">
+                                <span>Vertical (Y)</span> <span id="yValDisplay" class="font-mono text-xs">0</span>
+                            </label>
+                            <input type="range" id="yOffset" min="-400" max="400" value="0" title="Vertical Position" class="input-slider">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-gray-100 bg-white z-10">
+            <button id="downloadBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-200 transform transition active:scale-95 disabled:bg-gray-300 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                <i class="fas fa-file-export"></i> Export PDF
+            </button>
+        </div>
+    </aside>
+
+    <main class="w-full h-1/2 md:h-full bg-slate-100 relative flex items-center justify-center p-4 md:p-10 overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#4F46E5 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+        <div id="loading" class="hidden absolute z-50 bg-white/90 backdrop-blur px-6 py-3 rounded-full shadow-xl flex items-center gap-3 border border-gray-200">
+            <i class="fas fa-circle-notch fa-spin text-indigo-600"></i>
+            <span class="text-sm font-medium text-gray-700">Rendering...</span>
+        </div>
+
+        <div id="emptyState" class="text-center">
+            <div class="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-file-pdf text-4xl text-gray-300"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-700">No PDF Selected</h3>
+            <p class="text-sm text-gray-500 mt-1">Upload a file to preview changes</p>
+        </div>
+
+        <iframe id="pdfPreview" title="PDF Live Preview" class="hidden w-full h-full max-w-4xl shadow-2xl rounded-lg border border-gray-200 bg-white transition-opacity duration-300"></iframe>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
